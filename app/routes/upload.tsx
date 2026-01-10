@@ -7,9 +7,20 @@ import FileUploader from '~/components/FileUploader'
 const upload = () => {
 const [isProcessing, setIsProcessing] = useState(false);
 const [statusText, setStatusText] = useState('');
+const [file, setFile] = useState<File | null>(null);
 
+const handleFileSelect = (file: File | null) => {
+    setFile(file);
+}
 const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget.closest('form')
+    if (!form) return;
+    const formData = new FormData(form);
 
+    const companyName : FormDataEntryValue | null = formData.get('company-name');
+    const jobTitle : FormDataEntryValue | null = formData.get('job-title');
+    const jobDescription : FormDataEntryValue | null = formData.get('job-description');
 }
 
     return (
@@ -42,7 +53,8 @@ const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
                             </div>
                              <div className="form-div">
                                 <label htmlFor="uploader">Upload Resume</label>
-                                <FileUploader />                            </div>
+                                
+                                <FileUploader onFileSelect = {handleFileSelect} />                            </div>
                             <button className="primary-button" type="submit">
                                 Analyze Resume
                             </button>
