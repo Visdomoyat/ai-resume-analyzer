@@ -21,6 +21,13 @@ const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     const companyName : FormDataEntryValue | null = formData.get('company-name');
     const jobTitle : FormDataEntryValue | null = formData.get('job-title');
     const jobDescription : FormDataEntryValue | null = formData.get('job-description');
+
+    console.log( {
+        companyName,
+        jobTitle,
+        jobDescription,
+        file
+    })
 }
 
     return (
