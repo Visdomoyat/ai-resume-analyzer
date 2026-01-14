@@ -39,21 +39,28 @@ export async function convertPdfToImage(
     const canvas = document.createElement("canvas");
     const context = canvas.getContext("2d");
 
+    if (!context) {
+      return {
+        imageUrl: "",
+        file: null,
+        error: "Failed to get canvas context",
+      };
+    }
+
     canvas.width = viewport.width;
     canvas.height = viewport.height;
 
-    if (context) {
-      context.imageSmoothingEnabled = true;
-      context.imageSmoothingQuality = "high";
-    }
+    context.imageSmoothingEnabled = true;
+    context.imageSmoothingQuality = "high";
 
-    await page.render({ canvasContext: context!, viewport }).promise;
+    // Wait for rendering to complete
+    await page.render({ canvasContext: context, viewport }).promise;
 
+    // Then convert to blob
     return new Promise((resolve) => {
       canvas.toBlob(
         (blob) => {
           if (blob) {
-            // Create a File from the blob with the same name as the pdf
             const originalName = file.name.replace(/\.pdf$/i, "");
             const imageFile = new File([blob], `${originalName}.png`, {
               type: "image/png",
@@ -73,13 +80,13 @@ export async function convertPdfToImage(
         },
         "image/png",
         1.0
-      ); // Set quality to maximum (1.0)
+      );
     });
   } catch (err) {
     return {
       imageUrl: "",
       file: null,
-      error: `Failed to convert PDF: ${err}`,
+      error: `Failed to convert PDF: ${err instanceof Error ? err.message : String(err)}`,
     };
   }
 }
