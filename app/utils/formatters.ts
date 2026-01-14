@@ -19,3 +19,6 @@ export const formatSize = (bytes: number, decimals: number = 2): string => {
 
   return (bytes / Math.pow(k, i)).toFixed(decimals) + ' ' + sizes[i];
 };
+
+export const generateUUID = () => crypto.randomUUID();
+
